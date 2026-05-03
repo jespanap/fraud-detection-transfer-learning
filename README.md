@@ -1,4 +1,4 @@
-# Fraud Detection with Transfer Learning
+# Fraud Detection with Transfer Learning (IEEE-CIS)
 
 **Universidad EAFIT — Neural Networks and Deep Learning (2026-1)**
 
@@ -6,10 +6,10 @@
 
 **Repository purpose:** project proposal — first deliverable
 
-> A deep-learning-based fraud detection system that leverages transfer learning
-> on tabular financial data. The project focuses on improving detection accuracy
-> in highly imbalanced transaction datasets by reusing representations learned
-> from large-scale pretraining and adapting them to fraud classification.
+> A deep learning system for fraud detection in online transactions using
+> transfer learning over high-dimensional tabular data. This project leverages
+> representation learning to improve detection performance under extreme class
+> imbalance and complex feature interactions.
 
 ---
 
@@ -19,7 +19,7 @@
 2. [Data](#2-data)
 3. [Base Architecture](#3-base-architecture)
 4. [Proposed Architecture](#4-proposed-architecture)
-5. [Data-Source Considerations](#5-data-source-considerations)
+5. [Data Challenges & Strategy](#5-data-challenges--strategy)
 6. [Transfer Learning Strategy](#6-transfer-learning-strategy)
 7. [Roadmap](#7-roadmap)
 8. [References](#8-references)
@@ -30,106 +30,96 @@
 
 ### 1.1. Domain
 
-Fraud detection in financial transactions is a binary classification problem
-where the goal is to identify whether a given transaction is legitimate or fraudulent.
+Fraud detection in e-commerce transactions involves identifying malicious
+activities within large-scale payment systems.
 
-Key challenges:
+This project is based on the  
+:contentReference[oaicite:1]{index=1}
 
-| Challenge            | Description |
-|---------------------|------------|
-| Class imbalance     | Fraud cases < 1% of total transactions |
-| Concept drift       | Fraud patterns evolve over time |
-| Feature complexity  | Non-linear relationships between variables |
-| Real-time constraint| Predictions must be fast |
+released by:
+
+- :contentReference[oaicite:2]{index=2}  
+- :contentReference[oaicite:3]{index=3}  
 
 ---
 
-### 1.2. Mathematical formulation
+### 1.2. Problem formulation
 
-We define a supervised learning problem:
+We define a binary classification problem:
 
 $$
 \mathcal{D} = \{(x_i, y_i)\}_{i=1}^{N}
 $$
 
-- $x_i \in \mathbb{R}^d$ — transaction feature vector  
-- $y_i \in \{0,1\}$ — label (0 = normal, 1 = fraud)
+- $x_i \in \mathbb{R}^d$ — transaction features (~400+)  
+- $y_i \in \{0,1\}$ — fraud label  
 
-The model learns:
+Model:
 
 $$
 f_\theta(x) = P(y=1 \mid x)
 $$
 
-Objective:
-
-$$
-\mathcal{L}(\theta) = - \sum_{i=1}^{N} \left[ y_i \log f_\theta(x_i) + (1-y_i)\log(1 - f_\theta(x_i)) \right]
-$$
-
 ---
 
-### 1.3. Why this is a deep-learning problem
+### 1.3. Why this is a hard problem
 
-1. **Highly non-linear interactions** between transaction features  
-2. **Severe imbalance** makes simple models biased toward majority class  
-3. **Feature reuse potential** — patterns learned in one dataset can transfer  
-4. **Temporal and behavioral signals** can be captured via representation learning  
+1. **Extreme feature dimensionality (~400 features)**  
+2. **Heterogeneous data** (transaction + identity)  
+3. **Severe class imbalance (~3–4% fraud)**  
+4. **Hidden patterns (anonymized features)**  
+5. **Non-linear dependencies across variables**  
 
 ---
 
 ### 1.4. Evaluation metrics
 
-| Metric        | Definition                          | Target |
-|--------------|------------------------------------|--------|
-| ROC-AUC      | Area under ROC curve               | ≥ 0.95 |
-| Precision    | TP / (TP + FP)                     | high   |
-| Recall       | TP / (TP + FN)                     | high   |
-| F1-score     | harmonic mean                      | ≥ 0.85 |
-| PR-AUC       | Precision-recall curve             | key metric |
+| Metric   | Importance |
+|----------|-----------|
+| ROC-AUC  | global performance |
+| PR-AUC   | key for imbalance |
+| Recall   | fraud detection sensitivity |
+| Precision| false positive control |
 
 ---
 
 ## 2. Data
 
-### 2.1. Dataset
+### 2.1. Dataset description
 
-We use the **Credit Card Fraud Detection dataset** (Kaggle):
+The dataset consists of two main tables:
 
-- ~284,807 transactions  
-- 492 fraud cases (~0.17%)  
-- PCA-transformed features: `V1`–`V28`  
-- Additional features: `Amount`, `Time`
-
----
-
-### 2.2. Feature representation
-
-| Feature     | Type        | Description |
-|------------|------------|-------------|
-| V1–V28     | continuous | anonymized PCA features |
-| Amount     | continuous | transaction value |
-| Time       | continuous | seconds since first transaction |
-
-Preprocessing:
-- Standardization of `Amount` and `Time`
-- Handling imbalance via weighting or sampling
+| File                     | Description |
+|--------------------------|------------|
+| `train_transaction.csv`  | transaction-level data |
+| `train_identity.csv`     | user/device information |
 
 ---
 
-### 2.3. Data challenges
+### 2.2. Feature groups
 
-- Extreme class imbalance  
-- Lack of interpretability (PCA features)  
-- Static dataset (no real temporal evolution)  
+| Group           | Examples |
+|----------------|----------|
+| Transaction     | amount, product type |
+| Identity        | device, browser |
+| Temporal        | transaction time |
+| Anonymized      | V1–V339 |
+
+---
+
+### 2.3. Data processing pipeline
+
+1. Merge transaction + identity tables  
+2. Handle missing values (~high sparsity)  
+3. Encode categorical variables  
+4. Normalize numerical features  
+5. Feature selection / dimensionality reduction  
 
 ---
 
 ## 3. Base Architecture
 
-Baseline model: traditional machine learning
-
-### 3.1. Model
+### 3.1. Baseline models
 
 - Logistic Regression  
 - Random Forest  
@@ -139,111 +129,109 @@ Baseline model: traditional machine learning
 
 ### 3.2. Limitations
 
-1. No representation learning  
-2. Poor generalization to unseen fraud patterns  
-3. Sensitive to imbalance  
-4. No transfer learning capability  
+1. Manual feature engineering required  
+2. Limited generalization  
+3. No transfer learning  
+4. Poor handling of high-dimensional interactions  
 
 ---
 
 ## 4. Proposed Architecture
 
-We propose a **deep tabular model with transfer learning** using:
+We propose a deep tabular model based on:
 
-- :contentReference[oaicite:0]{index=0}  
-
----
-
-### 4.1. Architecture
-
-| Component        | Specification |
-|-----------------|--------------|
-| Input           | numerical features |
-| Embedding layer | feature-wise embeddings |
-| Transformer     | multi-head attention |
-| Dense layers    | fully connected |
-| Output          | sigmoid (fraud probability) |
+- :contentReference[oaicite:4]{index=4}  
 
 ---
 
-### 4.2. Why this works
+### 4.1. Architecture overview
 
-1. **Attention mechanism** captures feature interactions  
-2. **Better generalization** vs tree models  
-3. **Transferable embeddings** across datasets  
-4. Handles tabular data effectively  
+| Component        | Description |
+|-----------------|------------|
+| Input           | numerical + categorical features |
+| Embeddings      | feature-wise embeddings |
+| Transformer     | multi-head attention layers |
+| Dense layers    | nonlinear feature combination |
+| Output          | sigmoid probability |
 
 ---
 
-## 5. Data-Source Considerations
+### 4.2. Advantages
 
-### 5.1. Imbalance handling
+1. Learns feature interactions automatically  
+2. Scales to high-dimensional data  
+3. Produces transferable representations  
+4. Handles heterogeneous inputs  
+
+---
+
+## 5. Data Challenges & Strategy
+
+### 5.1. Class imbalance
 
 - Weighted loss  
-- SMOTE (optional)  
-- Undersampling  
+- Focal loss (optional)  
+- Stratified sampling  
 
 ---
 
-### 5.2. Feature engineering
+### 5.2. High dimensionality
 
-- Transaction frequency  
-- Aggregations per user (if available)  
-- Time-based features  
+- Feature selection  
+- Regularization  
+- Embedding compression  
 
 ---
 
-### 5.3. Limitations
+### 5.3. Missing data
 
-- Dataset lacks user IDs  
-- No sequential behavior modeling  
+- Imputation  
+- Learned embeddings for missing values  
 
 ---
 
 ## 6. Transfer Learning Strategy
 
-We leverage pretraining from large tabular datasets.
+### 6.1. Motivation
 
-### 6.1. Source model
-
-Pretrained:
-- :contentReference[oaicite:1]{index=1}  
+Training from scratch on tabular data is inefficient.
+We leverage pretrained representations.
 
 ---
 
 ### 6.2. Transfer approach
 
-| Layer              | Strategy |
-|--------------------|----------|
-| Embeddings         | reused |
-| Transformer layers | fine-tuned |
-| Output layer       | re-trained |
+| Component         | Strategy |
+|------------------|----------|
+| Embeddings       | reused |
+| Transformer      | fine-tuned |
+| Output layer     | re-trained |
 
 ---
 
-### 6.3. Training phases
+### 6.3. Training schedule
 
 | Phase | Description |
 |------|------------|
-| 1    | Freeze backbone, train classifier |
-| 2    | Unfreeze transformer |
+| 1    | Freeze backbone |
+| 2    | Partial unfreeze |
 | 3    | Full fine-tuning |
 
 ---
 
-### 6.4. Benefits
+### 6.4. Expected benefits
 
 - Faster convergence  
-- Better minority detection  
-- Improved generalization  
+- Better fraud recall  
+- Improved robustness  
 
 ---
 
 ## 7. Roadmap
 
-- Data preprocessing pipeline  
-- Baseline implementation  
-- Transformer model training  
+- Data preprocessing  
+- Baseline training  
+- Transformer implementation  
 - Transfer learning experiments  
 - Evaluation and comparison  
 
@@ -251,7 +239,7 @@ Pretrained:
 
 ## 8. References
 
-1. Gorishniy, Y. et al. *Revisiting Deep Learning Models for Tabular Data.*
-2. Vaswani, A. et al. *Attention is All You Need.*
-3. Chen, T. & Guestrin, C. *XGBoost.*
-4. He, H. & Garcia, E. *Learning from Imbalanced Data.*
+1. IEEE-CIS Fraud Detection (Kaggle)  
+2. Vaswani et al. *Attention is All You Need*  
+3. Gorishniy et al. *FT-Transformer*  
+4. Chen & Guestrin *XGBoost*  
