@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 780" font-family="'Inter','Segoe UI',system-ui,sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f7fafc"/>
+    </linearGradient>
+    <linearGradient id="frozenGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ebf4ff"/>
+      <stop offset="100%" stop-color="#bee3f8"/>
+    </linearGradient>
+    <linearGradient id="partialGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffaf0"/>
+      <stop offset="100%" stop-color="#fbd38d"/>
+    </linearGradient>
+    <linearGradient id="fullGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#faf5ff"/>
+      <stop offset="100%" stop-color="#d6bcfa"/>
+    </linearGradient>
+    <linearGradient id="trainGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff5f5"/>
+      <stop offset="100%" stop-color="#feb2b2"/>
+    </linearGradient>
+    <linearGradient id="outGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0fff4"/>
+      <stop offset="100%" stop-color="#9ae6b4"/>
+    </linearGradient>
+    <linearGradient id="preGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e6fffa"/>
+      <stop offset="100%" stop-color="#b2f5ea"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2d3748"/>
+    </marker>
+    <marker id="arrGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#a0aec0"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="780" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="660" y="44" text-anchor="middle" font-size="22" font-weight="700" fill="#1a365d">Transfer Learning Architecture — Three-Phase Fine-Tuning of FT-Transformer</text>
+  <text x="660" y="68" text-anchor="middle" font-size="13" fill="#4a5568">Pretrained backbone progressively unfrozen across phases to maximize fraud recall under class imbalance</text>
+
+  <!-- ===== LEFT: PRETRAIN ===== -->
+  <text x="170" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3748">Pretraining</text>
+
+  <rect x="30" y="124" width="280" height="260" rx="10" fill="url(#preGrad)" stroke="#2c7a7b" stroke-width="2"/>
+  <text x="170" y="152" text-anchor="middle" font-size="15" font-weight="700" fill="#234e52">Masked Feature Modeling</text>
+  <line x1="50" y1="164" x2="290" y2="164" stroke="#2c7a7b" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+  <text x="170" y="190" text-anchor="middle" font-size="12" fill="#2d3748">Pretrain objective: BERT-style</text>
+  <text x="170" y="212" text-anchor="middle" font-size="11" fill="#4a5568">Randomly mask 15% of feature tokens</text>
+  <text x="170" y="232" text-anchor="middle" font-size="11" fill="#4a5568">Train to reconstruct masked values</text>
+
+  <text x="170" y="262" text-anchor="middle" font-size="12" fill="#2d3748">Source: related financial tabular data</text>
+  <text x="170" y="284" text-anchor="middle" font-size="11" fill="#4a5568">(e.g. public payment / bank datasets)</text>
+
+  <text x="170" y="314" text-anchor="middle" font-size="12" fill="#2d3748">Result: pretrained backbone weights</text>
+  <text x="170" y="336" text-anchor="middle" font-size="11" fill="#4a5568">Embeddings + Transformer layers</text>
+
+  <text x="170" y="370" text-anchor="middle" font-size="11" fill="#234e52" font-style="italic">Encodes general transaction structure</text>
+
+  <!-- Arrow pretraining → Phase 1 -->
+  <line x1="314" y1="254" x2="356" y2="254" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== PHASE COLUMNS ===== -->
+
+  <!-- Phase 1 -->
+  <text x="530" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3748">Phase 1 — Head only</text>
+
+  <rect x="362" y="124" width="336" height="80" rx="10" fill="url(#frozenGrad)" stroke="#2c5282" stroke-width="2"/>
+  <text x="530" y="148" text-anchor="middle" font-size="13" font-weight="700" fill="#1a365d">Embeddings</text>
+  <text x="530" y="168" text-anchor="middle" font-size="11" fill="#4a5568">FROZEN — pretrained weights locked</text>
+  <text x="530" y="192" text-anchor="middle" font-size="11" fill="#2c5282" font-style="italic">No gradient flows through embedding layer</text>
+
+  <line x1="530" y1="208" x2="530" y2="228" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="362" y="232" width="336" height="80" rx="10" fill="url(#frozenGrad)" stroke="#2c5282" stroke-width="2"/>
+  <text x="530" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#1a365d">Transformer × L</text>
+  <text x="530" y="276" text-anchor="middle" font-size="11" fill="#4a5568">FROZEN — all attention layers locked</text>
+  <text x="530" y="300" text-anchor="middle" font-size="11" fill="#2c5282" font-style="italic">Representations transfer as-is from pretraining</text>
+
+  <line x1="530" y1="316" x2="530" y2="336" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="362" y="340" width="336" height="80" rx="10" fill="url(#trainGrad)" stroke="#c53030" stroke-width="2"/>
+  <text x="530" y="364" text-anchor="middle" font-size="13" font-weight="700" fill="#742a2a">Output Head</text>
+  <text x="530" y="384" text-anchor="middle" font-size="11" fill="#4a5568">TRAINING — lr = 1e-3 · 10 epochs</text>
+  <text x="530" y="408" text-anchor="middle" font-size="11" fill="#742a2a" font-style="italic">Adapts classifier to fraud domain rapidly</text>
+
+  <!-- Phase 1 → 2 arrow -->
+  <line x1="700" y1="280" x2="740" y2="280" stroke="#2d3748" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Phase 2 -->
+  <text x="918" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3748">Phase 2 — Partial unfreeze</text>
+
+  <rect x="748" y="124" width="340" height="80" rx="10" fill="url(#frozenGrad)" stroke="#2c5282" stroke-width="2"/>
+  <text x="918" y="148" text-anchor="middle" font-size="13" font-weight="700" fill="#1a365d">Embeddings</text>
+  <text x="918" y="168" text-anchor="middle" font-size="11" fill="#4a5568">FROZEN — still locked</text>
+  <text x="918" y="192" text-anchor="middle" font-size="11" fill="#2c5282" font-style="italic">Low-level token representations preserved</text>
+
+  <line x1="918" y1="208" x2="918" y2="228" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="748" y="232" width="340" height="90" rx="10" fill="url(#partialGrad)" stroke="#c05621" stroke-width="2"/>
+  <text x="918" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#7b341e">Transformer × L</text>
+  <text x="918" y="278" text-anchor="middle" font-size="11" fill="#4a5568">TOP L/2 LAYERS UNFROZEN</text>
+  <text x="918" y="298" text-anchor="middle" font-size="11" fill="#4a5568">lr = 5e-4 · cosine decay</text>
+  <text x="918" y="314" text-anchor="middle" font-size="11" fill="#7b341e" font-style="italic">Refines upper-level cross-feature attention</text>
+
+  <line x1="918" y1="326" x2="918" y2="346" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="748" y="350" width="340" height="70" rx="10" fill="url(#trainGrad)" stroke="#c53030" stroke-width="2"/>
+  <text x="918" y="374" text-anchor="middle" font-size="13" font-weight="700" fill="#742a2a">Output Head</text>
+  <text x="918" y="394" text-anchor="middle" font-size="11" fill="#4a5568">CONTINUES TRAINING · lr = 5e-4</text>
+  <text x="918" y="412" text-anchor="middle" font-size="11" fill="#742a2a" font-style="italic">Jointly refines representations + classifier</text>
+
+  <!-- Phase 2 → 3 arrow -->
+  <line x1="1090" y1="280" x2="1130" y2="280" stroke="#2d3748" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Phase 3 -->
+  <text x="1225" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3748">Phase 3 — Full fine-tuning</text>
+
+  <rect x="1136" y="124" width="154" height="80" rx="10" fill="url(#fullGrad)" stroke="#6b46c1" stroke-width="2"/>
+  <text x="1213" y="152" text-anchor="middle" font-size="13" font-weight="700" fill="#44337a">Embeddings</text>
+  <text x="1213" y="172" text-anchor="middle" font-size="11" fill="#4a5568">UNFROZEN</text>
+  <text x="1213" y="192" text-anchor="middle" font-size="11" fill="#44337a" font-style="italic">lr = 1e-4</text>
+
+  <line x1="1213" y1="208" x2="1213" y2="228" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="1136" y="232" width="154" height="90" rx="10" fill="url(#fullGrad)" stroke="#6b46c1" stroke-width="2"/>
+  <text x="1213" y="260" text-anchor="middle" font-size="13" font-weight="700" fill="#44337a">Transformer</text>
+  <text x="1213" y="280" text-anchor="middle" font-size="11" fill="#4a5568">ALL LAYERS</text>
+  <text x="1213" y="298" text-anchor="middle" font-size="11" fill="#4a5568">UNFROZEN</text>
+  <text x="1213" y="314" text-anchor="middle" font-size="11" fill="#44337a" font-style="italic">lr = 1e-4</text>
+
+  <line x1="1213" y1="326" x2="1213" y2="346" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="1136" y="350" width="154" height="70" rx="10" fill="url(#trainGrad)" stroke="#c53030" stroke-width="2"/>
+  <text x="1213" y="374" text-anchor="middle" font-size="13" font-weight="700" fill="#742a2a">Head</text>
+  <text x="1213" y="394" text-anchor="middle" font-size="11" fill="#4a5568">FINAL</text>
+  <text x="1213" y="412" text-anchor="middle" font-size="11" fill="#742a2a" font-style="italic">lr = 1e-4</text>
+
+  <!-- ===== LEGEND ===== -->
+  <rect x="30" y="460" width="660" height="130" rx="10" fill="#edf2f7" stroke="#4a5568" stroke-width="1"/>
+  <text x="360" y="484" text-anchor="middle" font-size="13" font-weight="700" fill="#1a365d">Training schedule &amp; stopping criteria</text>
+
+  <rect x="56" y="500" width="14" height="14" rx="3" fill="#bee3f8" stroke="#2c5282" stroke-width="1.5"/>
+  <text x="78" y="513" font-size="11" fill="#2d3748">Frozen layer (no gradient)</text>
+
+  <rect x="56" y="524" width="14" height="14" rx="3" fill="#fbd38d" stroke="#c05621" stroke-width="1.5"/>
+  <text x="78" y="537" font-size="11" fill="#2d3748">Partially unfrozen</text>
+
+  <rect x="56" y="548" width="14" height="14" rx="3" fill="#d6bcfa" stroke="#6b46c1" stroke-width="1.5"/>
+  <text x="78" y="561" font-size="11" fill="#2d3748">Fully fine-tuned (low lr)</text>
+
+  <rect x="56" y="572" width="14" height="14" rx="3" fill="#feb2b2" stroke="#c53030" stroke-width="1.5"/>
+  <text x="78" y="585" font-size="11" fill="#2d3748">Re-trained from scratch</text>
+
+  <text x="300" y="513" font-size="11" fill="#2d3748">Early stopping: patience = 5 epochs on val PR-AUC</text>
+  <text x="300" y="533" font-size="11" fill="#2d3748">LR schedule: cosine annealing within each phase</text>
+  <text x="300" y="553" font-size="11" fill="#2d3748">Optimizer: Adam (β₁=0.9, β₂=0.999, ε=1e-8)</text>
+  <text x="300" y="573" font-size="11" fill="#2d3748">Stratified batching · pos_weight = N_neg / N_pos</text>
+
+  <!-- ===== EXPECTED BENEFITS ===== -->
+  <rect x="710" y="460" width="580" height="130" rx="10" fill="#f0fff4" stroke="#2f855a" stroke-width="1.5"/>
+  <text x="1000" y="484" text-anchor="middle" font-size="13" font-weight="700" fill="#22543d">Expected benefits over training from scratch</text>
+  <line x1="730" y1="494" x2="1270" y2="494" stroke="#2f855a" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+  <text x="726" y="516" font-size="12" fill="#2d3748">⚡ Faster convergence — warm-started backbone reaches competitive AUC sooner</text>
+  <text x="726" y="538" font-size="12" fill="#2d3748">🎯 Better fraud recall — pretrained embeddings separate hard negatives more cleanly</text>
+  <text x="726" y="560" font-size="12" fill="#2d3748">🛡 Improved robustness — less prone to overfitting in the rare-class (3.5%) regime</text>
+  <text x="726" y="582" font-size="12" fill="#2d3748">♻ Reusable representations — [CLS] embeddings transferable to related fraud tasks</text>
+
+  <!-- ===== FOOTER ===== -->
+  <rect x="30" y="612" width="1260" height="54" rx="10" fill="#edf2f7" stroke="#4a5568" stroke-width="1"/>
+  <text x="660" y="632" text-anchor="middle" font-size="13" font-weight="700" fill="#1a365d">Why progressive unfreezing matters for tabular data</text>
+  <text x="660" y="652" text-anchor="middle" font-size="12" fill="#2d3748">Catastrophic forgetting is a real risk when fine-tuning on a small target dataset. Freezing the backbone in Phase 1 forces the head to adapt without corrupting pretrained representations.</text>
+  <text x="660" y="672" text-anchor="middle" font-size="12" fill="#2d3748">Partial unfreeze in Phase 2 then refines upper attention layers that are most domain-specific, while Phase 3 squeezes the last performance points with a very low learning rate.</text>
+
+  <!-- Evaluation bar -->
+  <rect x="30" y="690" width="1260" height="72" rx="10" fill="#fff5f5" stroke="#c53030" stroke-width="1"/>
+  <text x="660" y="710" text-anchor="middle" font-size="13" font-weight="700" fill="#742a2a">Final evaluation protocol</text>
+  <text x="660" y="732" text-anchor="middle" font-size="12" fill="#2d3748">Metrics: ROC-AUC · PR-AUC · Recall @ precision ≥ 0.8 · F₁</text>
+  <text x="660" y="752" text-anchor="middle" font-size="12" fill="#2d3748">Comparison: base pipeline (XGBoost) vs. FT-Transformer from scratch vs. FT-Transformer with transfer learning</text>
+</svg>

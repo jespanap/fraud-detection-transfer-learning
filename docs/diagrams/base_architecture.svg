@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 720" font-family="'Inter','Segoe UI',system-ui,sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f7fafc"/>
+    </linearGradient>
+    <linearGradient id="srcA" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ebf4ff"/>
+      <stop offset="100%" stop-color="#bee3f8"/>
+    </linearGradient>
+    <linearGradient id="srcB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e6fffa"/>
+      <stop offset="100%" stop-color="#b2f5ea"/>
+    </linearGradient>
+    <linearGradient id="procGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffaf0"/>
+      <stop offset="100%" stop-color="#fbd38d"/>
+    </linearGradient>
+    <linearGradient id="modelGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#faf5ff"/>
+      <stop offset="100%" stop-color="#d6bcfa"/>
+    </linearGradient>
+    <linearGradient id="outGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff5f5"/>
+      <stop offset="100%" stop-color="#feb2b2"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2d3748"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="720" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="660" y="44" text-anchor="middle" font-size="22" font-weight="700" fill="#1a365d">Base Architecture — Classical ML Pipeline for Fraud Detection</text>
+  <text x="660" y="68" text-anchor="middle" font-size="13" fill="#4a5568">Manual feature engineering → baseline classifiers → binary fraud prediction</text>
+
+  <!-- ===== COL 1: RAW DATA SOURCES ===== -->
+  <text x="180" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3748">Raw Data</text>
+
+  <!-- Source A: Transactions -->
+  <rect x="40" y="124" width="280" height="130" rx="10" fill="url(#srcA)" stroke="#2c5282" stroke-width="2"/>
+  <text x="180" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#1a365d">A. Transaction Table</text>
+  <text x="180" y="172" text-anchor="middle" font-size="12" fill="#2c5282">train_transaction.csv · ~590k rows</text>
+  <text x="180" y="194" text-anchor="middle" font-size="11" fill="#2d3748">TransactionAmt, ProductCD,</text>
+  <text x="180" y="210" text-anchor="middle" font-size="11" fill="#2d3748">card1–card6, V1–V339, addr…</text>
+  <text x="180" y="244" text-anchor="middle" font-size="11" fill="#2c5282" font-style="italic">Core financial signal · high sparsity</text>
+
+  <!-- Source B: Identity -->
+  <rect x="40" y="280" width="280" height="130" rx="10" fill="url(#srcB)" stroke="#2c7a7b" stroke-width="2"/>
+  <text x="180" y="306" text-anchor="middle" font-size="14" font-weight="700" fill="#234e52">B. Identity Table</text>
+  <text x="180" y="328" text-anchor="middle" font-size="12" fill="#2c7a7b">train_identity.csv · ~144k rows</text>
+  <text x="180" y="350" text-anchor="middle" font-size="11" fill="#2d3748">DeviceType, DeviceInfo,</text>
+  <text x="180" y="366" text-anchor="middle" font-size="11" fill="#2d3748">browser, OS, id_01–id_38…</text>
+  <text x="180" y="400" text-anchor="middle" font-size="11" fill="#234e52" font-style="italic">Left join on TransactionID · ~45% missing</text>
+
+  <!-- Arrows to processing -->
+  <line x1="324" y1="189" x2="398" y2="310" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="324" y1="345" x2="398" y2="345" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== COL 2: PROCESSING ===== -->
+  <text x="558" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3748">Feature Engineering</text>
+
+  <rect x="402" y="220" width="310" height="250" rx="10" fill="url(#procGrad)" stroke="#c05621" stroke-width="2"/>
+  <text x="557" y="248" text-anchor="middle" font-size="15" font-weight="700" fill="#7b341e">Manual Processing Pipeline</text>
+  <line x1="422" y1="260" x2="692" y2="260" stroke="#c05621" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+  <text x="557" y="284" text-anchor="middle" font-size="12" fill="#2d3748">① Merge tables on TransactionID</text>
+  <text x="557" y="306" text-anchor="middle" font-size="12" fill="#2d3748">② Impute missing values (median / mode)</text>
+  <text x="557" y="328" text-anchor="middle" font-size="12" fill="#2d3748">③ Label-encode categoricals</text>
+  <text x="557" y="350" text-anchor="middle" font-size="12" fill="#2d3748">④ Standard-scale numericals</text>
+  <text x="557" y="372" text-anchor="middle" font-size="12" fill="#2d3748">⑤ Variance threshold · mutual info filter</text>
+  <text x="557" y="396" text-anchor="middle" font-size="11" fill="#4a5568">output: dense feature matrix (~400-D)</text>
+  <text x="557" y="456" text-anchor="middle" font-size="11" fill="#7b341e" font-style="italic">No learned representations — fully handcrafted</text>
+
+  <!-- Arrows to models -->
+  <line x1="714" y1="300" x2="796" y2="220" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="714" y1="345" x2="796" y2="380" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="714" y1="390" x2="796" y2="530" stroke="#2d3748" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== COL 3: MODELS ===== -->
+  <text x="1000" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3748">Baseline Models</text>
+
+  <!-- LR -->
+  <rect x="800" y="124" width="380" height="120" rx="10" fill="url(#modelGrad)" stroke="#6b46c1" stroke-width="2"/>
+  <text x="990" y="150" text-anchor="middle" font-size="15" font-weight="700" fill="#44337a">Logistic Regression</text>
+  <text x="990" y="174" text-anchor="middle" font-size="12" fill="#2d3748">L2 regularization · class_weight='balanced'</text>
+  <text x="990" y="196" text-anchor="middle" font-size="11" fill="#4a5568">Threshold tuned on PR curve · fast baseline</text>
+  <text x="990" y="234" text-anchor="middle" font-size="11" fill="#44337a" font-style="italic">Linear boundary — misses feature interactions</text>
+
+  <!-- RF -->
+  <rect x="800" y="310" width="380" height="120" rx="10" fill="url(#modelGrad)" stroke="#6b46c1" stroke-width="2"/>
+  <text x="990" y="336" text-anchor="middle" font-size="15" font-weight="700" fill="#44337a">Random Forest</text>
+  <text x="990" y="360" text-anchor="middle" font-size="12" fill="#2d3748">500 trees · max_depth=20 · class_weight</text>
+  <text x="990" y="382" text-anchor="middle" font-size="11" fill="#4a5568">OOB estimate · feature importance ranking</text>
+  <text x="990" y="420" text-anchor="middle" font-size="11" fill="#44337a" font-style="italic">Good for high-dim · no TL · slow inference</text>
+
+  <!-- XGB -->
+  <rect x="800" y="496" width="380" height="120" rx="10" fill="url(#modelGrad)" stroke="#6b46c1" stroke-width="2"/>
+  <text x="990" y="522" text-anchor="middle" font-size="15" font-weight="700" fill="#44337a">XGBoost</text>
+  <text x="990" y="546" text-anchor="middle" font-size="12" fill="#2d3748">scale_pos_weight · lr=0.05 · early stopping</text>
+  <text x="990" y="568" text-anchor="middle" font-size="11" fill="#4a5568">5-fold stratified CV · AUC monitored</text>
+  <text x="990" y="606" text-anchor="middle" font-size="11" fill="#44337a" font-style="italic">Strong tabular baseline · no representation TL</text>
+
+  <!-- ===== FOOTER ===== -->
+  <rect x="40" y="648" width="1240" height="54" rx="10" fill="#edf2f7" stroke="#4a5568" stroke-width="1"/>
+  <text x="660" y="670" text-anchor="middle" font-size="13" font-weight="700" fill="#1a365d">Core limitation of the base pipeline</text>
+  <text x="660" y="690" text-anchor="middle" font-size="12" fill="#2d3748">Feature interactions must be hand-crafted — there is no mechanism to learn representations or transfer knowledge across tasks. The V1–V339 anonymized features remain largely opaque to all three models.</text>
+</svg>
